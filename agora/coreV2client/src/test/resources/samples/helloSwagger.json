@@ -1,0 +1,127 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "helloDS",
+    "description" : "<br/><a href=\"https://docs.google.com/document/d/1RL5nrkHS6F2JhghNt952pkgIsE-FEWroud2W_UiOpws/edit#heading=h.qt2qjr3eczfs\">More info about Swagger 2 and restrictions.<a/>",
+    "version" : "2.2.1"
+  },
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "hellos"
+  } ],
+  "paths" : {
+    "/hellos" : {
+      "post" : {
+        "tags" : [ "hellos" ],
+        "summary" : "Creates new Hello object.",
+        "description" : "Performs simple db read operation. Please note that on Swagger UI any information from second and following sentences\n will go to Implementation Notes<br/><br/><strong>Return:</strong> THello",
+        "operationId" : "addHello",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "tHello",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/THello"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "added successfully"
+          },
+          "400" : {
+            "description" : "bad request"
+          },
+          "404" : {
+            "description" : "Hello id not exists"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/hellos/{id}" : {
+      "get" : {
+        "tags" : [ "hellos" ],
+        "summary" : "Gets existing Hello object.",
+        "description" : "Performs simple db read operation.\n Please note that on Swagger UI any information from second and following sentences\n will go to Implementation Notes.<br/><br/><strong>Return:</strong> THello instance",
+        "operationId" : "getHello",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id of existing Hello object, try agora or odesk, on development env.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "schema" : {
+              "$ref" : "#/definitions/THello"
+            }
+          },
+          "400" : {
+            "description" : "bad request"
+          },
+          "404" : {
+            "description" : "Hello id not exists"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "hellos" ],
+        "summary" : "Updates existing hello object.",
+        "description" : "<br/><br/><strong>Return:</strong> THello",
+        "operationId" : "updateHello",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id of object",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "tHello",
+          "description" : "updated object, sample: {\"1\":{\"str\":\"odesk\"},\"2\":{\"str\":\"Hi Odesk!!!\"}}\n               sample values: id =>  \"odesk\",value => \"Hi Odesk!!\"",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/THello"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "updated successfully"
+          },
+          "400" : {
+            "description" : "bad request"
+          },
+          "404" : {
+            "description" : "Hello id not exists"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "THello" : {
+      "x-fqn" : "com.odesk.agora.thrift.hello.THello",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "created_on" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
