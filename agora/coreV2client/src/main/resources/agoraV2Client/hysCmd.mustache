@@ -1,0 +1,73 @@
+package {{package}};
+
+import javax.annotation.Generated;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.odesk.agora.hystrix.GenericWsDependencyHystrixCommand;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+
+import java.text.MessageFormat;
+
+import com.netflix.hystrix.exception.HystrixBadRequestException;
+import com.odesk.agora.exception.HystrixClientErrorException;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+{{>generatedAnnotation}}
+{{#operations}}{{#operation}}
+public class {{classname}} extends GenericWsDependencyHystrixCommand<{{>returnTypeOrVoid}}> {
+    {{#allParams}}
+    private final {{dataType}} {{paramName}};
+    {{/allParams}}
+
+    @Inject
+    protected {{classname}}({{#allParams}}@Assisted("{{paramName}}") {{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+        super("{{appName}}", "{{operationId}}");
+        {{#allParams}}
+        this.{{paramName}} = {{paramName}};
+        {{/allParams}}
+    }
+
+    protected {{classname}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+        super("{{appName}}", "{{operationId}}");
+        {{#allParams}}
+        this.{{paramName}} = {{paramName}};
+        {{/allParams}}
+    }
+
+    @Override
+    public boolean validateInput() {
+        {{#allParams}}{{#required}}
+        if ({{paramName}} == null) {
+            return false;
+        }
+        {{/required}}{{/allParams}}
+        return true;
+    }
+
+    @Override
+    protected void specifyUri(UriBuilder uriBuilder) {
+        uriBuilder.path("{{{path}}}"{{#pathParams}}
+            .replaceAll("\\{" + "{{baseName}}" + "\\}", {{paramName}}.toString()){{/pathParams}});
+        {{#queryParams}}
+        uriBuilder.queryParam("{{baseName}}", {{paramName}});
+        {{/queryParams}}
+    }
+
+    @Override
+    protected Response invoke(Invocation.Builder invocationBuilder) {
+        return invocationBuilder.{{httpMethod}}({{#bodyParam}}Entity.entity({{paramName}}, "application/x-thrift+json"){{/bodyParam}});
+    }
+
+    @Override
+    public {{>returnTypeOrVoid}} getResultFromSuccessfulResponse(Response response) {
+        return response.readEntity({{>returnTypeOrVoid}}.class);
+    }
+}
+{{/operation}}{{/operations}}
