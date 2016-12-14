@@ -1,0 +1,15 @@
+package {{apiPackage}};
+
+import javax.annotation.Generated;
+
+import com.google.inject.assistedinject.Assisted;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+{{>generatedAnnotation}}
+public interface {{commandFactoryName}} {
+{{#apiInfo}}{{#apis}}{{#operations}}
+    {{classname}} create{{classname}}({{#operation}}{{#allParams}}@Assisted("{{paramName}}") {{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/operation}});
+{{/operations}}{{/apis}}{{/apiInfo}}
+}
